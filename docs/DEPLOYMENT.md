@@ -3,8 +3,11 @@
 > **État (2026-06-10)** : landing + cockpit démo en ligne sur
 > https://chassis-pilote.netlify.app (deploy CLI manuel, équipe AgentX,
 > site id `5d90193d-5b92-4f8c-952d-fd25964ad71d`).
-> GitHub : en attente d'un accès au compte `Chassis-AI`.
-> Supabase : projet EU à créer, puis exécuter `supabase/schema.sql`.
+> GitHub : https://github.com/Chassis-AI/chassis (public, branche main ;
+> le remote est épinglé au compte `Chassis-AI` — gh garde ce compte en
+> keyring, les autres comptes de la machine ne sont pas utilisés ici).
+> Reste : lier le site Netlify au repo (CI auto), créer le projet Supabase
+> EU + exécuter `supabase/schema.sql` + variables d'env dans Netlify.
 
 ## 1. GitHub
 
