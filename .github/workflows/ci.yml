@@ -26,8 +26,8 @@ jobs:
       - name: Build (core, providers, cockpit, daemon)
         run: pnpm -r build
 
-      - name: Tests @chassis/core
-        run: pnpm --filter @chassis/core test
+      - name: Tests full-stack (core, providers, daemon, cockpit, site)
+        run: pnpm run test
 
       - name: Génération de la landing multilingue
         run: node scripts/assemble.mjs

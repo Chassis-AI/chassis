@@ -293,7 +293,20 @@ const zh: Dict = {
   "gate.signoutLink": "退出登录",
 };
 
-const DICTS: Record<Lang, Dict> = { fr, en, es, zh };
+export const DICTS: Record<Lang, Dict> = { fr, en, es, zh };
+
+/** Traduction pure (testable hors React) : fallback en → clé brute. */
+export function translate(
+  lang: Lang,
+  key: string,
+  vars?: Record<string, string | number>,
+): string {
+  let s = DICTS[lang][key] ?? DICTS.en[key] ?? key;
+  if (vars) {
+    for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));
+  }
+  return s;
+}
 
 function detectLang(): Lang {
   const fromUrl = new URLSearchParams(window.location.search).get("lang");
@@ -323,16 +336,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     setLangState(l);
   }, []);
 
-  const t = useCallback<Translate>(
-    (key, vars) => {
-      let s = DICTS[lang][key] ?? DICTS.en[key] ?? key;
-      if (vars) {
-        for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, String(v));
-      }
-      return s;
-    },
-    [lang],
-  );
+  const t = useCallback<Translate>((key, vars) => translate(lang, key, vars), [lang]);
 
   const value = useMemo(() => ({ lang, setLang, t }), [lang, setLang, t]);
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

@@ -8,7 +8,7 @@
     "build": "pnpm -r build",
     "build:core": "pnpm --filter @chassis/core build",
     "build:cockpit": "pnpm --filter @chassis/cockpit build",
-    "test": "pnpm -r test"
+    "test": "pnpm -r --if-present test && node --test scripts/build-site.test.mjs"
   },
   "engines": {
     "node": ">=20"

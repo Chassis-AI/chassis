@@ -13,7 +13,8 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "example": "tsx ./examples/boucle-paie.ts"
+    "example": "tsx ./examples/boucle-paie.ts",
+    "test": "node --test --import tsx ./src/__tests__/*.test.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.104.1",
