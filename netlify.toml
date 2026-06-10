@@ -1,0 +1,12 @@
+[build]
+  command = "corepack enable && pnpm install --frozen-lockfile=false && pnpm -r build && node scripts/assemble.mjs"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Le cockpit est une SPA servie sous /app/
+[[redirects]]
+  from = "/app/*"
+  to = "/app/index.html"
+  status = 200

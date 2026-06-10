@@ -1,0 +1,26 @@
+{
+  "name": "@chassis/providers",
+  "version": "0.1.0",
+  "description": "Adaptateurs de moteurs pour le routeur CHASSIS (Anthropic, test).",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "example": "tsx ./examples/boucle-paie.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.104.1",
+    "@chassis/core": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

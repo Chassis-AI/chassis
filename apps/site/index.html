@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CHASSIS — Le travail prouvé</title>
+<meta name="description" content="CHASSIS exécute du travail spécialisé, prouve chaque résultat avant de le livrer, et s'améliore semaine après semaine. Facturé à l'unité validée." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Spline+Sans+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#070809;--panel:#0c0e10;--panel2:#101315;
+  --line:rgba(231,236,234,.07);--line2:rgba(231,236,234,.14);
+  --text:#e7ecea;--dim:#8a938f;--faint:#4d5552;
+  --pass:#5be49b;--pass-dim:rgba(91,228,155,.1);
+  --fail:#f0716b;--hold:#e8b45a;
+  --fd:"Schibsted Grotesk",sans-serif;--fm:"Spline Sans Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--fd);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.02 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:inherit}
+.mono{font-family:var(--fm)}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;gap:24px;
+  padding:0 28px;height:56px;background:rgba(7,8,9,.82);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.logo{font-family:var(--fm);font-weight:600;font-size:14px;letter-spacing:.18em}
+.logo span{color:var(--pass)}
+.nav-links{margin-left:auto;display:flex;gap:26px;list-style:none}
+.nav-links a{font-family:var(--fm);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .15s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{font-family:var(--fm);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:#06170e;background:var(--pass);border-radius:5px;padding:8px 14px;text-decoration:none;transition:filter .15s}
+.nav-cta:hover{filter:brightness(1.1)}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 8vw 64px;position:relative}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(700px 420px at 78% 20%,rgba(91,228,155,.05),transparent 65%)}
+.eyebrow{font-family:var(--fm);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--pass);margin-bottom:26px;display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:"";width:36px;height:1px;background:var(--pass)}
+h1{font-size:clamp(44px,7.2vw,92px);font-weight:800;line-height:.98;letter-spacing:-.03em;max-width:900px}
+h1 .ghost{color:transparent;-webkit-text-stroke:1px rgba(231,236,234,.28)}
+h1 .proof{position:relative;white-space:nowrap}
+h1 .proof::after{content:"VALIDÉ";position:absolute;top:-.18em;right:-1.1em;transform:rotate(7deg);
+  font-family:var(--fm);font-size:.16em;font-weight:700;letter-spacing:.16em;color:var(--pass);
+  border:1.5px solid var(--pass);border-radius:4px;padding:.25em .6em;background:var(--pass-dim)}
+.hero-sub{font-size:17px;color:var(--dim);max-width:560px;margin:30px 0 44px;line-height:1.75}
+.hero-sub b{color:var(--text);font-weight:600}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--fm);font-size:12px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border-radius:6px;padding:14px 26px;transition:all .15s}
+.btn-p{color:#06170e;background:var(--pass)}
+.btn-p:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-s{color:var(--dim);border:1px solid var(--line2)}
+.btn-s:hover{color:var(--text);border-color:var(--faint)}
+.hero-rule{display:flex;gap:0;margin-top:72px;border-top:1px solid var(--line);max-width:860px}
+.hr-item{flex:1;padding:22px 18px 0;border-right:1px solid var(--line)}
+.hr-item:last-child{border-right:none}
+.hr-v{font-family:var(--fm);font-size:15px;font-weight:600;color:var(--pass)}
+.hr-l{font-size:11px;color:var(--faint);letter-spacing:.04em;margin-top:2px}
+
+section{padding:110px 8vw;position:relative}
+.sec-tag{font-family:var(--fm);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--pass);margin-bottom:18px}
+h2{font-size:clamp(30px,4vw,52px);font-weight:800;letter-spacing:-.02em;line-height:1.05;max-width:720px}
+.sec-sub{color:var(--dim);max-width:600px;margin-top:18px;font-size:15.5px;line-height:1.75}
+
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:54px}
+.b{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:26px;transition:border-color .2s,transform .2s}
+.b:hover{border-color:var(--line2);transform:translateY(-2px)}
+.b h3{font-size:16px;font-weight:700;margin:14px 0 8px;letter-spacing:-.01em}
+.b p{font-size:13px;color:var(--dim);line-height:1.7}
+.b .num{font-family:var(--fm);font-size:10px;color:var(--faint);letter-spacing:.2em}
+.b-3{grid-column:span 3}.b-2{grid-column:span 2}.b-4{grid-column:span 4}.b-6{grid-column:span 6}
+.b .stamp-row{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.chip{font-family:var(--fm);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 8px;border-radius:3px;border:1px solid}
+.chip.p{color:var(--pass);border-color:rgba(91,228,155,.4);background:var(--pass-dim)}
+.chip.f{color:var(--fail);border-color:rgba(240,113,107,.4);background:rgba(240,113,107,.08)}
+.chip.h{color:var(--hold);border-color:rgba(232,180,90,.4);background:rgba(232,180,90,.08)}
+.chip.n{color:var(--faint);border-color:var(--line2)}
+
+.loopline{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:54px}
+.step{background:var(--panel);padding:24px 20px}
+.step .k{font-family:var(--fm);font-size:22px;font-weight:600;color:var(--pass);opacity:.5}
+.step h4{font-size:14px;font-weight:700;margin:10px 0 6px}
+.step p{font-size:12px;color:var(--dim);line-height:1.65}
+
+.journey{margin-top:54px;border-left:1px solid var(--line2);max-width:760px}
+.j{position:relative;padding:0 0 44px 36px}
+.j::before{content:"";position:absolute;left:-5px;top:6px;width:9px;height:9px;border-radius:50%;
+  background:var(--bg);border:2px solid var(--pass)}
+.j:last-child{padding-bottom:0}
+.j .when{font-family:var(--fm);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--pass)}
+.j h4{font-size:18px;font-weight:700;margin:6px 0 8px;letter-spacing:-.01em}
+.j p{font-size:14px;color:var(--dim);line-height:1.75;max-width:620px}
+.j p b{color:var(--text);font-weight:600}
+
+.pricing{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:54px;margin-top:54px;
+  display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:center}
+.pricing h3{font-size:clamp(22px,2.6vw,32px);font-weight:800;letter-spacing:-.02em;line-height:1.15}
+.pricing .p-sub{color:var(--dim);margin-top:14px;font-size:14.5px;line-height:1.75}
+.p-box{border:1px solid var(--line2);border-radius:12px;padding:30px;text-align:center;position:relative}
+.p-box::before{content:"LE MODÈLE";position:absolute;top:-9px;left:50%;transform:translateX(-50%);
+  font-family:var(--fm);font-size:9px;letter-spacing:.25em;color:var(--faint);background:var(--panel);padding:0 12px}
+.p-line{font-family:var(--fm);font-size:13px;color:var(--dim);padding:12px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px}
+.p-line:last-child{border-bottom:none}
+.p-line .ok{color:var(--pass);font-weight:600}
+.p-line .ko{color:var(--faint);text-decoration:line-through}
+
+.cta{padding:130px 8vw;text-align:center}
+.cta h2{margin:0 auto;max-width:760px}
+.cta .sec-sub{margin-left:auto;margin-right:auto;text-align:center}
+.cta-actions{display:flex;gap:14px;justify-content:center;margin-top:42px;flex-wrap:wrap}
+
+footer{border-top:1px solid var(--line);padding:36px 8vw;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+footer .copy{font-family:var(--fm);font-size:11px;color:var(--faint)}
+footer .flinks{margin-left:auto;display:flex;gap:22px;list-style:none}
+footer .flinks a{font-family:var(--fm);font-size:11px;color:var(--faint);text-decoration:none}
+footer .flinks a:hover{color:var(--dim)}
+
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+@media(max-width:900px){
+  .nav-links{display:none}
+  .b-3,.b-2,.b-4,.b-6{grid-column:span 6}
+  .loopline{grid-template-columns:1fr 1fr}
+  .pricing{grid-template-columns:1fr;padding:32px}
+  .hero-rule{flex-direction:column}
+  .hr-item{border-right:none;border-bottom:1px solid var(--line);padding:16px 0}
+  section{padding:80px 6vw}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">CHASSIS<span>_</span></div>
+  <ul class="nav-links">
+    <li><a href="#principe">Principe</a></li>
+    <li><a href="#boucle">La boucle</a></li>
+    <li><a href="#parcours">Parcours</a></li>
+    <li><a href="#modele">Modèle</a></li>
+  </ul>
+  <a class="nav-cta" href="#pilote">Devenir pilote</a>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow">Système de travail vérifié</div>
+  <h1>
+    Le travail <span class="ghost">promis</span>,<br/>
+    <span class="proof">prouvé.</span>
+  </h1>
+  <p class="hero-sub">
+    CHASSIS exécute le travail spécialisé de votre métier, <b>prouve chaque résultat avant de le livrer</b>,
+    et ne mémorise que ce qui a été validé. Son taux de réussite monte semaine après semaine —
+    et vous ne payez que ce qui est prouvé.
+  </p>
+  <div class="hero-actions">
+    <a class="btn btn-p" href="#pilote">Programme pilote →</a>
+    <a class="btn btn-s" href="#principe">Comment ça marche</a>
+  </div>
+  <div class="hero-rule">
+    <div class="hr-item"><div class="hr-v">Verdict</div><div class="hr-l">chaque sortie passe le harness avant livraison</div></div>
+    <div class="hr-item"><div class="hr-v">Mémoire</div><div class="hr-l">n'apprend que du validé — jamais du bruit</div></div>
+    <div class="hr-item"><div class="hr-v">La courbe</div><div class="hr-l">le taux de réussite vérifié, votre seul KPI</div></div>
+    <div class="hr-item"><div class="hr-v">Au validé</div><div class="hr-l">facturation à l'unité prouvée, pas à la licence</div></div>
+  </div>
+</header>
+
+<section id="principe">
+  <div class="sec-tag">// 01 — Principe</div>
+  <h2>Un système qui refuse<br/>ce qu'il ne peut pas prouver.</h2>
+  <p class="sec-sub">
+    Les assistants IA promettent. CHASSIS démontre. Chaque tâche entre avec son critère de
+    vérification — sans critère, elle est rendue à l'humain. C'est cette discipline qui rend
+    l'autonomie possible.
+  </p>
+  <div class="bento">
+    <div class="b b-3 reveal">
+      <div class="num">01</div>
+      <h3>Le harness est la seule porte</h3>
+      <p>Rien n'est livré, rien n'est mémorisé, rien n'est facturé sans verdict. Chaque sortie est évaluée règle par règle — règles déclarées par votre métier, versionnées, auditables.</p>
+      <div class="stamp-row">
+        <span class="chip p">Conforme</span><span class="chip f">Anomalie</span><span class="chip h">Hors périmètre</span>
+      </div>
+    </div>
+    <div class="b b-3 reveal">
+      <div class="num">02</div>
+      <h3>Mémoire darwinienne</h3>
+      <p>Chaque correction validée, chaque rejet réel devient un acquis permanent — nommé, versionné, révocable. La mémoire ne contient que du prouvé : elle ne se dégrade pas, elle compose.</p>
+      <div class="stamp-row"><span class="chip p">Correctif validé</span><span class="chip h">Rejet appris</span></div>
+    </div>
+    <div class="b b-2 reveal">
+      <div class="num">03</div>
+      <h3>Calibré avant d'agir</h3>
+      <p>Le système rejoue votre historique et mesure sa fiabilité prédictive. Sous le seuil, il observe en silence. Il n'a pas le droit de proposer ce qu'il ne sait pas juger.</p>
+    </div>
+    <div class="b b-2 reveal">
+      <div class="num">04</div>
+      <h3>Autonomie méritée</h3>
+      <p>L'autonomie monte catégorie par catégorie, quand le taux vérifié dépasse le seuil — jamais d'un coup. Vous gardez la main sur chaque cran.</p>
+    </div>
+    <div class="b b-2 reveal">
+      <div class="num">05</div>
+      <h3>Moteurs interchangeables</h3>
+      <p>Claude, GPT, modèle local : routés par tâche, coût et latence. Le moteur change, la carrosserie — vos règles, votre mémoire — reste.</p>
+    </div>
+  </div>
+</section>
+
+<section id="boucle">
+  <div class="sec-tag">// 02 — La boucle</div>
+  <h2>Six temps. Un verdict.</h2>
+  <p class="sec-sub">À chaque dossier, le même cycle — et chaque verdict réel (l'institution accepte, rejette) revient recalibrer le système. La boucle est fermée par le monde, pas par une opinion.</p>
+  <div class="loopline">
+    <div class="step reveal"><div class="k">1</div><h4>Observation</h4><p>Le dossier entre avec son critère de vérification. Rappel des jetons mémoire pertinents.</p></div>
+    <div class="step reveal"><div class="k">2</div><h4>Génération</h4><p>Le moteur le mieux routé produit la sortie candidate, guidé par le validé passé.</p></div>
+    <div class="step reveal"><div class="k">3</div><h4>Évaluation</h4><p>Le harness juge, règle par règle. Justification ligne à ligne, jamais de boîte noire.</p></div>
+    <div class="step reveal"><div class="k">4</div><h4>Sélection</h4><p>Conforme → prêt. Anomalie → correction proposée. Invérifiable → rendu à l'humain.</p></div>
+    <div class="step reveal"><div class="k">5</div><h4>Application</h4><p>Selon le cran d'autonomie de la catégorie. Le harness reste la porte, autonomie ou pas.</p></div>
+    <div class="step reveal"><div class="k">6</div><h4>Mémorisation</h4><p>Seul le validé entre en mémoire. Chaque rejet réel devient une règle apprise.</p></div>
+  </div>
+</section>
+
+<section id="parcours">
+  <div class="sec-tag">// 03 — Parcours</div>
+  <h2>De l'historique à l'autonomie,<br/>au rythme de la preuve.</h2>
+  <div class="journey">
+    <div class="j reveal">
+      <div class="when">Jour 0 — Instanciation</div>
+      <h4>Vous déclarez votre vérité terrain. Une fois.</h4>
+      <p>CHASSIS se branche sur vos outils existants — <b>aucune nouvelle interface de travail</b>. Vous pointez le système vers votre historique : les dossiers passés et leurs verdicts réels. C'est tout ce qu'il demande.</p>
+    </div>
+    <div class="j reveal">
+      <div class="when">Semaines 1–2 — Mode ombre</div>
+      <h4>Il s'étalonne en silence.</h4>
+      <p>Le système rejoue votre historique et prédit chaque verdict connu. Tant que sa fiabilité n'atteint pas le seuil, <b>il ne propose rien</b>. Vous regardez la jauge monter.</p>
+    </div>
+    <div class="j reveal">
+      <div class="when">Semaine 3 — Mode copilote</div>
+      <h4>Votre file du matin, triée par la preuve.</h4>
+      <p>Les dossiers arrivent pré-jugés : conformes avec justification ligne à ligne, anomalies avec correction proposée, hors périmètre rendus à l'humain. <b>Vous validez par lot ce qui est prouvé</b>, vous décidez sur le reste.</p>
+    </div>
+    <div class="j reveal">
+      <div class="when">Mois 2–3 — Boucle fermée</div>
+      <h4>Chaque verdict réel le rend meilleur.</h4>
+      <p>L'institution accepte ou rejette : le système se recalibre, chaque rejet devient une règle apprise — payée une seule fois. <b>La courbe monte</b>, et c'est elle que vous montrez à votre direction.</p>
+    </div>
+    <div class="j reveal">
+      <div class="when">Mois 4+ — Autonomie méritée</div>
+      <h4>Cran par cran, catégorie par catégorie.</h4>
+      <p>Quand une catégorie dépasse le seuil vérifié sur la durée, le cockpit propose l'auto-traitement. Vous activez. <b>Votre temps se déplace vers les cas qui méritent un humain</b> — et chaque nouvel arrivant hérite de toute la mémoire au premier jour.</p>
+    </div>
+  </div>
+</section>
+
+<section id="modele">
+  <div class="sec-tag">// 04 — Modèle</div>
+  <h2>On ne facture que<br/>ce qui est prouvé.</h2>
+  <div class="pricing reveal">
+    <div>
+      <h3>Ni licence. Ni heures.<br/>L'unité validée.</h3>
+      <p class="p-sub">
+        Un SaaS vous facture que ça marche ou non. Un prestataire facture le temps passé.
+        CHASSIS ne peut facturer qu'une chose : <b style="color:var(--text)">une unité de travail passée au verdict</b> —
+        parce qu'il est le seul à pouvoir la prouver. Si la courbe ne monte pas, vous ne payez pas sa promesse :
+        vous ne payez rien.
+      </p>
+    </div>
+    <div class="p-box">
+      <div class="p-line"><span>Licence par siège</span><span class="ko">non</span></div>
+      <div class="p-line"><span>Facturation horaire</span><span class="ko">non</span></div>
+      <div class="p-line"><span>Unité vérifiée par le harness</span><span class="ok">oui</span></div>
+      <div class="p-line"><span>Pilote sur votre historique</span><span class="ok">au résultat</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="pilote">
+  <div class="sec-tag" style="text-align:center">// Programme pilote</div>
+  <h2>Donnez-nous 50 dossiers historiques.<br/>On ne facture que ce que le système valide.</h2>
+  <p class="sec-sub">Domaines à verdict vérifiable : paie &amp; déclaratif, facturation et rejets, conformité, classification réglementaire. La calibration se fait sur votre historique — vos données restent les vôtres, la mémoire apprise sur votre dossier vous appartient.</p>
+  <div class="cta-actions">
+    <a class="btn btn-p" href="mailto:mhoudini.sh@gmail.com?subject=Programme%20pilote%20CHASSIS">Candidater au pilote →</a>
+    <a class="btn btn-s" href="./app/">Voir le cockpit (démo)</a>
+  </div>
+</section>
+
+<footer>
+  <div class="logo">CHASSIS<span>_</span></div>
+  <div class="copy">// le travail prouvé — v0.1</div>
+  <ul class="flinks">
+    <li><a href="./app/">Cockpit</a></li>
+    <li><a href="#principe">Principe</a></li>
+    <li><a href="#pilote">Pilote</a></li>
+  </ul>
+</footer>
+
+<script>
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

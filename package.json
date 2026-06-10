@@ -1,0 +1,16 @@
+{
+  "name": "chassis",
+  "private": true,
+  "version": "0.1.0",
+  "description": "CHASSIS — système de travail vérifié. Harness, boucle, mémoire validée.",
+  "scripts": {
+    "dev": "pnpm --filter @chassis/cockpit dev",
+    "build": "pnpm -r build",
+    "build:core": "pnpm --filter @chassis/core build",
+    "build:cockpit": "pnpm --filter @chassis/cockpit build",
+    "test": "pnpm -r test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
