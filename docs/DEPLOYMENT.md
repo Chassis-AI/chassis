@@ -1,5 +1,11 @@
 # Déploiement CHASSIS
 
+> **État (2026-06-10)** : landing + cockpit démo en ligne sur
+> https://chassis-pilote.netlify.app (deploy CLI manuel, équipe AgentX,
+> site id `5d90193d-5b92-4f8c-952d-fd25964ad71d`).
+> GitHub : en attente d'un accès au compte `Chassis-AI`.
+> Supabase : projet EU à créer, puis exécuter `supabase/schema.sql`.
+
 ## 1. GitHub
 
 ```bash
