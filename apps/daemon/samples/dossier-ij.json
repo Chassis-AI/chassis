@@ -1,0 +1,6 @@
+{
+  "title": "FICTIF — Arrêt maladie Hôtel des Brumes (subrogation)",
+  "category": "Absences & IJ",
+  "payload": { "client": "Hôtel des Brumes", "salaireBase": 21000, "primes": 0, "maintienFin": "2026-06-30", "subrogationFin": "2026-06-14" },
+  "ruleIds": ["ij.subrogation"]
+}

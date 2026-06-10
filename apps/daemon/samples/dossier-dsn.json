@@ -1,0 +1,6 @@
+{
+  "title": "FICTIF — DSN mensuelle Aubrac SARL",
+  "category": "Paie standard",
+  "payload": { "client": "Aubrac SARL", "salaireBase": 42000, "primes": 1800 },
+  "ruleIds": ["paie.assiette-primes"]
+}

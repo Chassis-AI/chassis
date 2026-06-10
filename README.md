@@ -13,6 +13,7 @@ et monte en autonomie à la vitesse de la preuve. Facturé à l'unité validée.
 ```
 packages/core/      @chassis/core — harness, boucle 6 temps, mémoire validée, routeur de modèles
 packages/providers/ @chassis/providers — adaptateurs moteurs (Anthropic, test) + exemple bout en bout
+apps/daemon/        Daemon v0 — inbox surveillée → boucle → persistance (Supabase ou dry-run)
 apps/cockpit/       Cockpit (Vite + React) — file d'intentions, verdicts, courbe, autonomie
   src-tauri/        Coque desktop Tauri v2 (macOS .dmg / Windows .msi)
 apps/site/          Landing statique (Netlify)
@@ -27,8 +28,12 @@ docs/               doctrine, déploiement
 corepack enable          # pnpm
 pnpm install
 pnpm dev                 # cockpit sur http://localhost:5173 (mode démo seedé)
-pnpm -r build            # core + cockpit
+pnpm -r build            # core + providers + cockpit
 node scripts/assemble.mjs  # produit dist/ déployable
+
+# Le chaînon complet (daemon → boucle → verdicts) :
+pnpm --filter @chassis/daemon start            # dry-run sans config
+cp apps/daemon/samples/*.json apps/daemon/data/inbox/
 ```
 
 ### Desktop (optionnel — requiert la toolchain Rust)

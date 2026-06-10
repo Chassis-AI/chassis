@@ -1,0 +1,7 @@
+{
+  "title": "FICTIF — DSN client B (prime exclue, rejetée)",
+  "payload": { "client": "B", "salaireBase": 28000, "primes": 900 },
+  "ruleIds": ["paie.assiette-primes"],
+  "proposition": { "assiette": 28000 },
+  "accepted": false
+}

@@ -1,0 +1,7 @@
+{
+  "title": "FICTIF — IJ client C (maintien borné, accepté)",
+  "payload": { "client": "C", "salaireBase": 25000, "primes": 0, "maintienFin": "2026-05-10", "subrogationFin": "2026-05-20" },
+  "ruleIds": ["ij.subrogation"],
+  "proposition": { "assiette": 25000, "maintienFin": "2026-05-10" },
+  "accepted": true
+}

@@ -10,3 +10,8 @@ build/
 src-tauri/target/
 coverage/
 *.tsbuildinfo
+apps/daemon/data/inbox/
+apps/daemon/data/outbox/
+apps/daemon/data/processed/
+apps/daemon/data/erreurs/
+apps/daemon/data/settlements/
