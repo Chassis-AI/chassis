@@ -41,6 +41,7 @@ export function buildSite(distDir) {
       canonicalUrl: `${SITE_URL}${locale.path}`,
       hreflangLinks,
       appHref: `${locale.code === "fr" ? "./" : "../"}app/?lang=${locale.code}`,
+      demoHref: `${locale.code === "fr" ? "./" : "../"}app/?lang=${locale.code}&demo=1`,
       langSwitcher: LOCALES.map(
         (l) =>
           `<a href="${l.path}"${l.code === locale.code ? ' class="on"' : ""} hreflang="${l.htmlLang}">${l.label}</a>`,
