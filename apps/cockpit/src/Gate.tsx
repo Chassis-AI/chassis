@@ -1,17 +1,21 @@
 /**
  * Écrans hors-cockpit du mode live : connexion magic link,
- * bootstrap d'instance, chargement, erreur.
+ * bootstrap d'instance, chargement, erreur. Tous traduits (i18n).
  */
 
 import { useState, type FormEvent } from "react";
+import { LangSwitcher, useI18n } from "./lib/i18n";
 import { supabase } from "./lib/supabase";
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="gate">
       <div className="gate-box">
-        <div className="logo gate-logo">
-          CHASSIS<span className="tick">_</span>
+        <div className="gate-top">
+          <div className="logo gate-logo">
+            CHASSIS<span className="tick">_</span>
+          </div>
+          <LangSwitcher />
         </div>
         {children}
       </div>
@@ -20,26 +24,29 @@ function Shell({ children }: { children: React.ReactNode }) {
 }
 
 export function Loading() {
+  const { t } = useI18n();
   return (
     <Shell>
-      <p className="gate-sub">Chargement…</p>
+      <p className="gate-sub">{t("gate.loading")}</p>
     </Shell>
   );
 }
 
 export function ErrorScreen({ message, onRetry }: { message: string; onRetry: () => void }) {
+  const { t } = useI18n();
   return (
     <Shell>
-      <p className="gate-sub">Erreur de chargement</p>
+      <p className="gate-sub">{t("gate.errorTitle")}</p>
       <p className="gate-err">{message}</p>
       <button className="batch-btn gate-btn" onClick={onRetry}>
-        Réessayer
+        {t("gate.retry")}
       </button>
     </Shell>
   );
 }
 
 export function SignIn() {
+  const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [error, setError] = useState("");
@@ -62,13 +69,9 @@ export function SignIn() {
 
   return (
     <Shell>
-      <p className="gate-sub">
-        Connexion par lien magique — saisissez votre email, ouvrez le lien reçu.
-      </p>
+      <p className="gate-sub">{t("gate.signinSub")}</p>
       {state === "sent" ? (
-        <p className="gate-ok">
-          Lien envoyé à <b>{email}</b>. Ouvrez-le sur cet appareil.
-        </p>
+        <p className="gate-ok">{t("gate.sent", { email })}</p>
       ) : (
         <form className="gate-form" onSubmit={submit}>
           <input
@@ -76,12 +79,12 @@ export function SignIn() {
             type="email"
             required
             autoFocus
-            placeholder="vous@cabinet.fr"
+            placeholder={t("gate.emailPlaceholder")}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <button className="batch-btn gate-btn" disabled={state === "sending"}>
-            {state === "sending" ? "Envoi…" : "Recevoir le lien"}
+            {state === "sending" ? t("gate.sending") : t("gate.receiveLink")}
           </button>
           {state === "error" && <p className="gate-err">{error}</p>}
         </form>
@@ -99,6 +102,7 @@ export function NoInstance({
   onSignOut: () => void;
   userEmail: string | null;
 }) {
+  const { t } = useI18n();
   const [name, setName] = useState("");
   const [domain, setDomain] = useState("");
   const [state, setState] = useState<"idle" | "creating" | "error">("idle");
@@ -118,32 +122,31 @@ export function NoInstance({
   return (
     <Shell>
       <p className="gate-sub">
-        Connecté{userEmail ? ` (${userEmail})` : ""} — aucune instance.
-        <br />
-        Instanciez votre vertical : nom + domaine métier.
+        {t("gate.connected")}
+        {userEmail ? ` (${userEmail})` : ""} — {t("gate.noInstance")}
       </p>
       <form className="gate-form" onSubmit={submit}>
         <input
           className="gate-input"
           required
-          placeholder="Nom de l'instance (ex. Cabinet Méridien)"
+          placeholder={t("gate.namePlaceholder")}
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
         <input
           className="gate-input"
           required
-          placeholder="Domaine (ex. Pôle social — Paie & déclaratif)"
+          placeholder={t("gate.domainPlaceholder")}
           value={domain}
           onChange={(e) => setDomain(e.target.value)}
         />
         <button className="batch-btn gate-btn" disabled={state === "creating"}>
-          {state === "creating" ? "Création…" : "Créer l'instance"}
+          {state === "creating" ? t("gate.creating") : t("gate.createInstance")}
         </button>
         {state === "error" && <p className="gate-err">{error}</p>}
       </form>
       <button className="gate-link" onClick={onSignOut}>
-        Se déconnecter
+        {t("gate.signoutLink")}
       </button>
     </Shell>
   );

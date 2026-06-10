@@ -141,9 +141,10 @@ export const CURVE = {
   withoutMemory: [0.62, 0.63, 0.64, 0.63, 0.65, 0.66, 0.65, 0.67, 0.66, 0.68, 0.67, 0.68],
 };
 
+// `l` = clé i18n (libellé traduit dans l'UI ; les valeurs restent des données démo).
 export const KPIS = [
-  { v: "87%", l: "succès 1er envoi (S12)", em: true },
-  { v: "412", l: "unités validées ce mois", em: false },
-  { v: "9", l: "rejets évités (mémoire)", em: false },
-  { v: "31", l: "jetons actifs", em: false },
+  { v: "87%", l: "kpi.firstPassLast", em: true },
+  { v: "412", l: "kpi.unitsMonth", em: false },
+  { v: "9", l: "kpi.rejAvoided", em: false },
+  { v: "31", l: "kpi.tokens", em: false },
 ];

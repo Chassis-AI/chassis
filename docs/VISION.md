@@ -86,8 +86,11 @@ La couche (le chassis) est le seul actif présent dans toutes les cases. C'est
 ce qui distingue CHASSIS d'un éditeur vertical : un concurrent peut nous
 disputer une case, pas la matrice.
 
-Le départ est francophone (FR d'abord, puis BE/CH/QC qui partagent la
-langue) — décision actée : pas d'i18n avant l'acte 2 au plus tôt.
+Le go-to-market démarre francophone (FR d'abord, puis BE/CH/QC qui
+partagent la langue). Le **produit**, lui, est multilingue dès la v0.1
+(fr/en/es/zh — décision actée 2026-06-10) : la couche est mondiale par
+construction, ajouter une langue = ajouter un dictionnaire ; seule la
+prospection reste séquencée par la matrice.
 
 ## La séquence — quatre actes
 

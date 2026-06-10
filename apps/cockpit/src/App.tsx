@@ -1,14 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { ErrorScreen, Loading, NoInstance, SignIn } from "./Gate";
 import type { CockpitData, StampKind, UiCurve, UiIntent } from "./lib/data";
+import { LangSwitcher, useI18n, type Translate } from "./lib/i18n";
 import { useCockpit } from "./lib/useCockpit";
 
-const STAMP_LABEL: Record<StampKind, string> = {
-  pass: "Conforme",
-  fail: "Anomalie",
-  hold: "Hors périmètre",
-  idle: "En file",
-};
+const stampLabel = (t: Translate, stamp: StampKind) => t(`stamp.${stamp}`);
 
 export function App() {
   const cockpit = useCockpit();
@@ -26,7 +22,7 @@ export function App() {
   if (cockpit.phase === "error" || !cockpit.data)
     return (
       <ErrorScreen
-        message={cockpit.error ?? "Données indisponibles."}
+        message={cockpit.error ?? "—"}
         onRetry={() => void cockpit.reload()}
       />
     );
@@ -41,6 +37,7 @@ function Cockpit({
   data: CockpitData;
   cockpit: ReturnType<typeof useCockpit>;
 }) {
+  const { t } = useI18n();
   const [selectedId, setSelectedId] = useState<string>(data.intents[0]?.id ?? "");
   const [applying, setApplying] = useState(false);
 
@@ -79,11 +76,11 @@ function Cockpit({
         </div>
         <div className="instance">
           <b>{data.instance.name}</b> · {data.instance.domain} ·{" "}
-          {data.mode === "demo" ? "démo" : "réel"}
+          {data.mode === "demo" ? t("mode.demo") : t("mode.live")}
         </div>
         <div className="topbar-right">
-          <div className="gauge" title="Fiabilité du harness, mesurée sur l'historique">
-            <span>harness</span>
+          <div className="gauge" title={t("curve.title")}>
+            <span>{t("topbar.harness")}</span>
             <div className="gauge-track">
               <div
                 className="gauge-fill"
@@ -93,20 +90,21 @@ function Cockpit({
             <span className="gauge-val">
               {data.instance.harnessReliability !== null
                 ? `${(data.instance.harnessReliability * 100).toFixed(0)}%`
-                : "à mesurer"}
+                : t("common.toMeasure")}
             </span>
           </div>
           <div className="live">
             <span className="live-dot" />{" "}
-            {data.mode === "demo" ? "mode démo" : "boucle active"}
+            {data.mode === "demo" ? t("topbar.demoLive") : t("topbar.loopActive")}
           </div>
+          <LangSwitcher />
           {data.mode === "live" && (
             <button
               className="signout"
               title={cockpit.userEmail ?? undefined}
               onClick={() => void cockpit.signOut()}
             >
-              Déconnexion
+              {t("topbar.signout")}
             </button>
           )}
         </div>
@@ -140,34 +138,29 @@ function IntentQueue(props: {
   batchCount: number;
   applying: boolean;
 }) {
+  const { t } = useI18n();
   return (
     <section className="card card-queue">
       <div className="card-head">
-        <span className="card-title">File d'intentions</span>
-        <span className="card-meta">{props.intents.length} dossiers</span>
+        <span className="card-title">{t("queue.title")}</span>
+        <span className="card-meta">{t("queue.count", { n: props.intents.length })}</span>
       </div>
       <div className="queue-tally">
         <div className="tally pass">
           <div className="tally-n">{props.tally.pass}</div>
-          <div className="tally-l">conformes</div>
+          <div className="tally-l">{t("queue.pass")}</div>
         </div>
         <div className="tally fail">
           <div className="tally-n">{props.tally.fail}</div>
-          <div className="tally-l">anomalies</div>
+          <div className="tally-l">{t("queue.fail")}</div>
         </div>
         <div className="tally hold">
           <div className="tally-n">{props.tally.hold}</div>
-          <div className="tally-l">hors périm.</div>
+          <div className="tally-l">{t("queue.hold")}</div>
         </div>
       </div>
       <div className="queue-list">
-        {props.intents.length === 0 && (
-          <div className="empty">
-            File vide — les intentions arrivent
-            <br />
-            par le daemon ou l'API.
-          </div>
-        )}
+        {props.intents.length === 0 && <div className="empty">{t("queue.empty")}</div>}
         {props.intents.map((i) => (
           <button
             key={i.id}
@@ -180,7 +173,7 @@ function IntentQueue(props: {
               <span className="intent-cat">{i.category}</span>
             </span>
             <span className={`stamp ${i.stamp}`}>
-              {i.applied ? "Envoyé" : STAMP_LABEL[i.stamp]}
+              {i.applied ? t("stamp.sent") : stampLabel(t, i.stamp)}
             </span>
           </button>
         ))}
@@ -191,26 +184,27 @@ function IntentQueue(props: {
         onClick={props.onApplyBatch}
       >
         {props.applying
-          ? "Application…"
+          ? t("batch.applying")
           : props.batchCount === 0
-            ? "Aucun dossier en attente"
-            : `Valider le lot conforme (${props.batchCount})`}
+            ? t("batch.none")
+            : t("batch.apply", { n: props.batchCount })}
       </button>
     </section>
   );
 }
 
 function CurveCard({ curve, kpis }: { curve: UiCurve | null; kpis: CockpitData["kpis"] }) {
+  const { t } = useI18n();
   return (
     <section className="card">
       <div className="card-head">
-        <span className="card-title">La courbe — succès au premier envoi</span>
+        <span className="card-title">{t("curve.title")}</span>
         <span className="curve-legend">
           <span>
-            <i style={{ background: "var(--pass)" }} /> avec mémoire
+            <i style={{ background: "var(--pass)" }} /> {t("curve.withMemory")}
           </span>
           <span>
-            <i style={{ background: "var(--faint)" }} /> sans mémoire
+            <i style={{ background: "var(--faint)" }} /> {t("curve.withoutMemory")}
           </span>
         </span>
       </div>
@@ -218,18 +212,16 @@ function CurveCard({ curve, kpis }: { curve: UiCurve | null; kpis: CockpitData["
         {curve && curve.weeks.length > 1 ? (
           <CurveSvg curve={curve} />
         ) : (
-          <div className="empty">
-            à mesurer — la courbe apparaît
-            <br />
-            avec les premiers verdicts réels (≥ 2 semaines).
-          </div>
+          <div className="empty">{t("curve.empty")}</div>
         )}
       </div>
       <div className="kpis">
         {kpis.map((k) => (
           <div className="kpi" key={k.l}>
-            <div className="kpi-v">{k.em ? <em>{k.v}</em> : k.v}</div>
-            <div className="kpi-l">{k.l}</div>
+            <div className="kpi-v">
+              {k.v === null ? t("common.toMeasure") : k.em ? <em>{k.v}</em> : k.v}
+            </div>
+            <div className="kpi-l">{t(k.l)}</div>
           </div>
         ))}
       </div>
@@ -248,7 +240,9 @@ function CurveSvg({ curve }: { curve: UiCurve }) {
   const path = (vals: number[]) =>
     vals
       .map((v, i) =>
-        Number.isNaN(v) ? "" : `${i === 0 || Number.isNaN(vals[i - 1]) ? "M" : "L"}${x(i).toFixed(1)},${y(v).toFixed(1)}`,
+        Number.isNaN(v)
+          ? ""
+          : `${i === 0 || Number.isNaN(vals[i - 1]) ? "M" : "L"}${x(i).toFixed(1)},${y(v).toFixed(1)}`,
       )
       .filter(Boolean)
       .join(" ");
@@ -273,9 +267,7 @@ function CurveSvg({ curve }: { curve: UiCurve }) {
         strokeDasharray="3 4"
       />
       <path d={path(curve.withMemory)} fill="none" stroke="var(--pass)" strokeWidth="2" />
-      {!Number.isNaN(last) && (
-        <circle cx={x(lastIdx)} cy={y(last)} r="3.5" fill="var(--pass)" />
-      )}
+      {!Number.isNaN(last) && <circle cx={x(lastIdx)} cy={y(last)} r="3.5" fill="var(--pass)" />}
       {curve.weeks.map((w, i) =>
         i % 2 === 0 ? (
           <text
@@ -296,17 +288,14 @@ function CurveSvg({ curve }: { curve: UiCurve }) {
 }
 
 function VerdictCard({ intent }: { intent: UiIntent | null }) {
+  const { t } = useI18n();
   if (!intent || intent.findings.length === 0) {
     return (
       <section className="card">
         <div className="card-head">
-          <span className="card-title">Verdict du harness</span>
+          <span className="card-title">{t("verdict.title")}</span>
         </div>
-        <div className="empty">
-          {intent
-            ? "En file — pas encore évalué.\nLe harness ne préjuge jamais."
-            : "Sélectionnez un dossier."}
-        </div>
+        <div className="empty">{intent ? t("verdict.pending") : t("verdict.select")}</div>
       </section>
     );
   }
@@ -314,18 +303,18 @@ function VerdictCard({ intent }: { intent: UiIntent | null }) {
   return (
     <section className="card">
       <div className="card-head">
-        <span className="card-title">Verdict du harness</span>
-        <span className="card-meta">{intent.findings.length} règles évaluées</span>
+        <span className="card-title">{t("verdict.title")}</span>
+        <span className="card-meta">{t("verdict.rules", { n: intent.findings.length })}</span>
       </div>
       <div className="verdict-head">
         <div>
           <div className="verdict-title">{intent.title}</div>
           <div className="verdict-sub">
             {intent.ref} · {intent.category}
-            {intent.applied ? " · envoyé" : ""}
+            {intent.applied ? ` · ${t("verdict.sent")}` : ""}
           </div>
         </div>
-        <span className={`big-stamp ${stampClass}`}>{STAMP_LABEL[intent.stamp]}</span>
+        <span className={`big-stamp ${stampClass}`}>{stampLabel(t, intent.stamp)}</span>
       </div>
       <div className="findings">
         {intent.findings.map((f) => (
@@ -340,34 +329,23 @@ function VerdictCard({ intent }: { intent: UiIntent | null }) {
   );
 }
 
-const TOKEN_LABEL = {
-  fix: "Correctif validé",
-  rej: "Rejet appris",
-  conv: "Convention",
-} as const;
-
 function MemoryCard({ tokens }: { tokens: CockpitData["tokens"] }) {
+  const { t } = useI18n();
   return (
     <section className="card">
       <div className="card-head">
-        <span className="card-title">Mémoire validée</span>
-        <span className="card-meta">entrée : verdicts uniquement</span>
+        <span className="card-title">{t("memory.title")}</span>
+        <span className="card-meta">{t("memory.meta")}</span>
       </div>
       <div className="mem-list">
-        {tokens.length === 0 && (
-          <div className="empty">
-            Vide — la mémoire ne se remplit
-            <br />
-            que par verdicts et règlements réels.
-          </div>
-        )}
-        {tokens.map((t) => (
-          <div className="token" key={`${t.date}-${t.summary}`}>
+        {tokens.length === 0 && <div className="empty">{t("memory.empty")}</div>}
+        {tokens.map((tok) => (
+          <div className="token" key={`${tok.date}-${tok.summary}`}>
             <div className="token-top">
-              <span className={`token-kind ${t.kind}`}>{TOKEN_LABEL[t.kind]}</span>
-              <span className="token-date">{t.date}</span>
+              <span className={`token-kind ${tok.kind}`}>{t(`token.${tok.kind}`)}</span>
+              <span className="token-date">{tok.date}</span>
             </div>
-            <div className="token-sum">{t.summary}</div>
+            <div className="token-sum">{tok.summary}</div>
           </div>
         ))}
       </div>
@@ -376,19 +354,17 @@ function MemoryCard({ tokens }: { tokens: CockpitData["tokens"] }) {
 }
 
 function AutonomyCard({ categories }: { categories: CockpitData["categories"] }) {
+  const { t } = useI18n();
   return (
     <section className="card">
       <div className="card-head">
-        <span className="card-title">Autonomie par catégorie</span>
-        <span className="card-meta">le harness reste la porte</span>
+        <span className="card-title">{t("autonomy.title")}</span>
+        <span className="card-meta">{t("autonomy.meta")}</span>
       </div>
       <div className="cats">
-        {categories.length === 0 && (
-          <div className="empty">Aucune catégorie — créez-les à l'instanciation.</div>
-        )}
+        {categories.length === 0 && <div className="empty">{t("autonomy.empty")}</div>}
         {categories.map((c) => {
-          const eligible =
-            c.mode === "copilot" && c.rate !== null && c.rate >= c.threshold;
+          const eligible = c.mode === "copilot" && c.rate !== null && c.rate >= c.threshold;
           return (
             <div className="cat" key={c.name}>
               <div className="cat-top">
@@ -396,7 +372,7 @@ function AutonomyCard({ categories }: { categories: CockpitData["categories"] })
                 <span
                   className={`cat-mode ${c.mode === "auto" ? "auto" : eligible ? "eligible" : ""}`}
                 >
-                  {c.mode === "auto" ? "Auto" : c.mode === "copilot" ? "Copilote" : "Ombre"}
+                  {t(`autonomy.${c.mode}`)}
                 </span>
               </div>
               <div className="cat-track">
@@ -405,10 +381,13 @@ function AutonomyCard({ categories }: { categories: CockpitData["categories"] })
               <div className="cat-stats">
                 <span>
                   {c.rate === null
-                    ? "à mesurer"
-                    : `${(c.rate * 100).toFixed(1)}% vérifié · ${c.weeks} sem.`}
+                    ? t("common.toMeasure")
+                    : t("autonomy.stats", {
+                        rate: (c.rate * 100).toFixed(1),
+                        weeks: c.weeks,
+                      })}
                 </span>
-                <span>seuil {(c.threshold * 100).toFixed(0)}%</span>
+                <span>{t("autonomy.threshold", { t: (c.threshold * 100).toFixed(0) })}</span>
               </div>
             </div>
           );

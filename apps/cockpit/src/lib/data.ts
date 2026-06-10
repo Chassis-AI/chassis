@@ -60,7 +60,9 @@ export interface UiCurve {
 }
 
 export interface UiKpi {
-  v: string;
+  /** null = pas encore mesurable → l'UI affiche « à mesurer » (traduit). */
+  v: string | null;
+  /** Clé i18n du libellé (la valeur est une donnée, le libellé est de la chrome). */
   l: string;
   em: boolean;
 }
@@ -306,13 +308,13 @@ export async function loadLiveData(): Promise<CockpitData> {
     : undefined;
   const kpis: UiKpi[] = [
     {
-      v: lastWithMemory !== undefined ? `${(lastWithMemory * 100).toFixed(0)}%` : "à mesurer",
-      l: "succès 1er envoi (dernière sem.)",
+      v: lastWithMemory !== undefined ? `${(lastWithMemory * 100).toFixed(0)}%` : null,
+      l: "kpi.firstPassLast",
       em: lastWithMemory !== undefined,
     },
-    { v: String(passed30d), l: "verdicts conformes (30 j)", em: false },
-    { v: String(queued), l: "dossiers en file", em: false },
-    { v: String(tokens.length), l: "jetons actifs", em: false },
+    { v: String(passed30d), l: "kpi.passed30d", em: false },
+    { v: String(queued), l: "kpi.queued", em: false },
+    { v: String(tokens.length), l: "kpi.tokens", em: false },
   ];
 
   return {
