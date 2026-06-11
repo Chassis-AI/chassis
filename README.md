@@ -4,9 +4,26 @@
 résultat avant de le livrer (harness), ne mémorise que le validé (mémoire darwinienne),
 et monte en autonomie à la vitesse de la preuve. Facturé à l'unité validée.
 
+**🌍 En ligne** — [Français](https://chassis-pilote.netlify.app) ·
+[English](https://chassis-pilote.netlify.app/en/) ·
+[Español](https://chassis-pilote.netlify.app/es/) ·
+[中文](https://chassis-pilote.netlify.app/zh/) ·
+[Cockpit (démo)](https://chassis-pilote.netlify.app/app/?lang=fr&demo=1) ·
+[Cockpit (réel)](https://chassis-pilote.netlify.app/app/)
+
 > Doctrine complète : [docs/DOCTRINE.md](docs/DOCTRINE.md) ·
 > Vision : [docs/VISION.md](docs/VISION.md) ·
 > Déploiement : [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+
+## Aperçu
+
+| Cockpit — la file pré-jugée, la courbe, la mémoire | Connexion (magic link) |
+|---|---|
+| ![Cockpit en mode démo](docs/captures/cockpit-demo.png) | ![Connexion au cockpit](docs/captures/cockpit-login.png) |
+
+| FR | EN | ES | 中文 |
+|---|---|---|---|
+| ![Landing FR](docs/captures/landing-fr.png) | ![Landing EN](docs/captures/landing-en.png) | ![Landing ES](docs/captures/landing-es.png) | ![Landing ZH](docs/captures/landing-zh.png) |
 
 ## Structure
 
