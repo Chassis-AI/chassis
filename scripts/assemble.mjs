@@ -16,6 +16,7 @@ rmSync(dist, { recursive: true, force: true });
 mkdirSync(join(dist, "app"), { recursive: true });
 
 buildSite(dist);
+cpSync(join(root, "apps/site/favicon.svg"), join(dist, "favicon.svg"));
 cpSync(join(root, "apps/cockpit/dist"), join(dist, "app"), { recursive: true });
 // Règles : SPA du cockpit + héritage de l'ancienne racine française
 // (l'anglais est désormais à la racine ; /en/ redirige pour les liens enregistrés).

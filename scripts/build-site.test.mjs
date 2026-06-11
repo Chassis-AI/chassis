@@ -56,6 +56,11 @@ describe("pages générées", () => {
     it(`${locale.path} : le lien démo force ?demo=1 et propage la langue`, () => {
       assert.ok(html.includes(`lang=${locale.code}&demo=1`));
     });
+
+    it(`${locale.path} : « Se connecter » force le mode réel (demo=0) et le favicon est déclaré`, () => {
+      assert.ok(html.includes(`class="nav-login" href="${locale.path === "/" ? "./" : "../"}app/?lang=${locale.code}&demo=0"`));
+      assert.ok(html.includes('rel="icon" type="image/svg+xml" href="/favicon.svg"'));
+    });
   }
 
   it("le mot banni n'apparaît dans aucune page générée", () => {

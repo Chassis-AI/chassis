@@ -42,7 +42,9 @@ export function buildSite(distDir) {
       htmlLang: locale.htmlLang,
       canonicalUrl: `${SITE_URL}${locale.path}`,
       hreflangLinks,
-      appHref: `${locale.path === "/" ? "./" : "../"}app/?lang=${locale.code}`,
+      // demo=0 force le mode réel : « Se connecter » doit TOUJOURS mener à la
+      // connexion, même si l'utilisateur a visité la démo dans la même session.
+      appHref: `${locale.path === "/" ? "./" : "../"}app/?lang=${locale.code}&demo=0`,
       demoHref: `${locale.path === "/" ? "./" : "../"}app/?lang=${locale.code}&demo=1`,
       langSwitcher: LOCALES.map(
         (l) =>
