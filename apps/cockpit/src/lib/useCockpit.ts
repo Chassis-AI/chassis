@@ -19,8 +19,16 @@ import {
   loadDemoData,
   loadLiveData,
   NoInstanceError,
+  submitIntention,
   type CockpitData,
 } from "./data";
+import {
+  depositPayload,
+  depositRuleIds,
+  depositTitle,
+  judgeInBrowser,
+  type DepositInput,
+} from "./demoLoop";
 
 export type CockpitPhase = "loading" | "signin" | "no-instance" | "ready" | "error";
 
@@ -32,6 +40,12 @@ export interface CockpitState {
   error: string | null;
   /** Marque le lot conforme comme appliqué (écrit en base en mode live). */
   applyBatch: (ids: string[]) => Promise<void>;
+  /**
+   * Dépose un dossier. Démo : jugé dans le navigateur, retourne l'id à
+   * sélectionner. Live : inséré en file ('queued'), le daemon le juge —
+   * retourne null et recharge (immédiatement puis après le verdict).
+   */
+  deposit: (input: DepositInput, categoryId: string, categoryLabel: string) => Promise<string | null>;
   /** Bootstrap : crée l'instance de l'utilisateur puis recharge. */
   bootstrap: (name: string, domain: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -111,6 +125,33 @@ export function useCockpit(): CockpitState {
     [reload],
   );
 
+  const deposit = useCallback(
+    async (input: DepositInput, categoryId: string, categoryLabel: string) => {
+      if (!isLive) {
+        const intent = await judgeInBrowser(input, categoryLabel);
+        setData((prev) =>
+          prev ? { ...prev, intents: [intent, ...prev.intents] } : prev,
+        );
+        return intent.id;
+      }
+      const instanceId = data?.instance.id;
+      if (!instanceId) throw new Error("Instance inconnue.");
+      await submitIntention({
+        instanceId,
+        categoryId,
+        title: depositTitle(input),
+        payload: depositPayload(input),
+        ruleIds: depositRuleIds(input),
+      });
+      await reload(); // la ligne apparaît "en file"
+      // Le daemon revendique la file toutes les ~2 s : on recharge après le verdict.
+      setTimeout(() => void reload(), 4000);
+      setTimeout(() => void reload(), 9000);
+      return null;
+    },
+    [data, reload],
+  );
+
   const bootstrap = useCallback(
     async (name: string, domain: string) => {
       await createInstance(name, domain);
@@ -130,6 +171,7 @@ export function useCockpit(): CockpitState {
     userEmail: session?.user?.email ?? null,
     error,
     applyBatch,
+    deposit,
     bootstrap,
     signOut,
     reload,

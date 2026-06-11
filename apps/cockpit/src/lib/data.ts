@@ -45,6 +45,8 @@ export interface UiToken {
 }
 
 export interface UiCategory {
+  /** Id réel (uuid) en live, synthétique en démo — requis pour déposer. */
+  id: string;
   name: string;
   mode: "shadow" | "copilot" | "auto";
   /** Taux de succès vérifié au premier envoi — null tant que rien n'est mesuré. */
@@ -106,6 +108,7 @@ export function loadDemoData(): CockpitData {
     })),
     tokens: DEMO_TOKENS.map((t) => ({ kind: t.kind, date: t.date, summary: t.summary })),
     categories: DEMO_CATEGORIES.map((c) => ({
+      id: `demo_${c.name}`,
       name: c.name,
       mode: c.mode,
       rate: c.mode === "shadow" ? null : c.rate,
@@ -259,7 +262,7 @@ export async function loadLiveData(): Promise<CockpitData> {
   }));
 
   // Catégories : taux de succès au premier envoi mesuré sur les verdicts réels.
-  const uiCategories: UiCategory[] = categories.map((c) => {
+  const uiCategories: UiCategory[] = categories.map((c: { id: string; label: string; autonomy: string; autonomy_threshold: number }) => {
     const catIntentions = intentions.filter((i) => i.category_id === c.id);
     const evaluated = catIntentions.filter((i) => firstVerdict.has(i.id));
     const passedFirst = evaluated.filter(
@@ -269,6 +272,7 @@ export async function loadLiveData(): Promise<CockpitData> {
       evaluated.map((i) => isoWeek(firstVerdict.get(i.id)!.issued_at)),
     ).size;
     return {
+      id: c.id,
       name: c.label,
       mode: c.autonomy as UiCategory["mode"],
       rate: evaluated.length > 0 ? passedFirst.length / evaluated.length : null,
@@ -344,6 +348,32 @@ export async function applyIntentions(ids: string[]): Promise<void> {
     .update({ status: "applied" })
     .in("id", ids)
     .eq("status", "verified");
+  if (error) throw error;
+}
+
+/**
+ * Dépose une intention dans la file réelle : insérée en 'queued',
+ * elle sera revendiquée et jugée par le daemon (le harness reste la porte).
+ */
+export async function submitIntention(args: {
+  instanceId: string;
+  categoryId: string;
+  title: string;
+  payload: unknown;
+  ruleIds: string[];
+}): Promise<void> {
+  if (!supabase) throw new Error("Dépôt impossible en mode démo via la base.");
+  const { error } = await supabase.from("intentions").insert({
+    instance_id: args.instanceId,
+    category_id: args.categoryId,
+    title: args.title,
+    payload: args.payload,
+    criterion:
+      args.ruleIds.length > 0
+        ? { kind: "institutional", ruleIds: args.ruleIds, description: "Déposé via le cockpit" }
+        : null,
+    status: "queued",
+  });
   if (error) throw error;
 }
 

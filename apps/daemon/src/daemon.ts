@@ -17,7 +17,7 @@ import {
 } from "@chassis/core";
 import { anthropicProvider, hasAnthropicKey, testProvider } from "@chassis/providers";
 import { KNOWN_RULE_IDS, RULES } from "./rules.js";
-import type { DaemonStore } from "./store.js";
+import type { DaemonStore, QueuedIntention } from "./store.js";
 import type { DossierFile, HistoryFile } from "./types.js";
 
 /**
@@ -134,6 +134,36 @@ export async function buildRuntime(
 
   const loop = new ChassisLoop(harness, memory, router, generate);
   return { harness, loop, capture, engines };
+}
+
+/** Traite une intention déposée via le cockpit (file en base, déjà revendiquée). */
+export async function processQueued(
+  runtime: DaemonRuntime,
+  store: DaemonStore,
+  instanceId: string,
+  queued: QueuedIntention,
+): Promise<LoopResult> {
+  const intention: Intention = {
+    id: queued.id,
+    instanceId,
+    categoryId: queued.categoryId,
+    title: queued.title,
+    payload: queued.payload,
+    criterion: queued.criterion,
+    status: "processing",
+    createdAt: new Date().toISOString(),
+  };
+  const category: Category = {
+    id: queued.categoryId,
+    instanceId,
+    label: queued.categoryLabel,
+    autonomy: queued.autonomy,
+    autonomyThreshold: queued.autonomyThreshold,
+  };
+  const result = await runtime.loop.run(intention, category);
+  await store.persistResult(queued.id, result, runtime.capture.drain());
+  await store.refreshCurve();
+  return result;
 }
 
 export async function processDossier(

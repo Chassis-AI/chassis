@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { DepositOverlay } from "./Deposit";
 import { ErrorScreen, Loading, NoInstance, SignIn } from "./Gate";
 import type { CockpitData, StampKind, UiCurve, UiIntent } from "./lib/data";
 import { LangSwitcher, useI18n, type Translate } from "./lib/i18n";
@@ -40,6 +41,7 @@ function Cockpit({
   const { t } = useI18n();
   const [selectedId, setSelectedId] = useState<string>(data.intents[0]?.id ?? "");
   const [applying, setApplying] = useState(false);
+  const [depositOpen, setDepositOpen] = useState(false);
 
   // Si la liste change (rechargement live), garder une sélection valide.
   useEffect(() => {
@@ -110,6 +112,18 @@ function Cockpit({
         </div>
       </header>
 
+      {depositOpen && (
+        <DepositOverlay
+          categories={data.categories}
+          mode={data.mode}
+          onClose={() => setDepositOpen(false)}
+          onSubmit={async (input, categoryId, categoryLabel) => {
+            const newId = await cockpit.deposit(input, categoryId, categoryLabel);
+            if (newId) setSelectedId(newId); // démo : verdict immédiat, sélectionné
+          }}
+        />
+      )}
+
       <main className="bento">
         <IntentQueue
           intents={data.intents}
@@ -117,6 +131,7 @@ function Cockpit({
           selectedId={selectedId}
           onSelect={setSelectedId}
           onApplyBatch={() => void applyBatch()}
+          onDeposit={() => setDepositOpen(true)}
           batchCount={passReady.length}
           applying={applying}
         />
@@ -135,6 +150,7 @@ function IntentQueue(props: {
   selectedId: string;
   onSelect: (id: string) => void;
   onApplyBatch: () => void;
+  onDeposit: () => void;
   batchCount: number;
   applying: boolean;
 }) {
@@ -145,6 +161,9 @@ function IntentQueue(props: {
         <span className="card-title">{t("queue.title")}</span>
         <span className="card-meta">{t("queue.count", { n: props.intents.length })}</span>
       </div>
+      <button className="deposit-btn" onClick={props.onDeposit}>
+        {t("deposit.open")}
+      </button>
       <div className="queue-tally">
         <div className="tally pass">
           <div className="tally-n">{props.tally.pass}</div>

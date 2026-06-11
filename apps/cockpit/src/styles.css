@@ -539,6 +539,89 @@ body::after {
 
 .gate-top { display: flex; align-items: center; justify-content: space-between; }
 
+/* ── Dépôt de dossier ── */
+.deposit-btn {
+  flex-shrink: 0;
+  margin-bottom: 12px;
+  font-family: var(--font-m);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pass);
+  background: var(--pass-dim);
+  border: 1px solid rgba(91, 228, 155, 0.4);
+  border-radius: 6px;
+  padding: 10px;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+.deposit-btn:hover { filter: brightness(1.15); }
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(7, 8, 9, 0.78);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.overlay-box {
+  width: 420px;
+  max-width: 100%;
+  background: var(--panel);
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  padding: 24px;
+  animation: rise 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.overlay-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.overlay-close {
+  background: none;
+  border: none;
+  color: var(--faint);
+  font-size: 14px;
+  cursor: pointer;
+}
+.overlay-close:hover { color: var(--text); }
+
+.deposit-kinds { display: flex; gap: 8px; }
+.deposit-kind {
+  flex: 1;
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+  background: var(--bg);
+  border: 1px solid var(--line-2);
+  border-radius: 6px;
+  padding: 9px 6px;
+  cursor: pointer;
+}
+.deposit-kind.on { color: var(--pass); border-color: rgba(91, 228, 155, 0.5); background: var(--pass-dim); }
+
+.deposit-row { display: flex; gap: 8px; }
+.deposit-row .gate-input { flex: 1; min-width: 0; }
+.deposit-date { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.deposit-date span {
+  font-family: var(--font-m);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.deposit-note { font-size: 11px; color: var(--faint); line-height: 1.6; }
+.deposit-queued { display: flex; flex-direction: column; gap: 14px; }
+
 /* ── responsive ── */
 @media (max-width: 1100px) {
   .bento {

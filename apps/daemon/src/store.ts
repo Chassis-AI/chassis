@@ -19,8 +19,25 @@ export interface PersistedResult {
   intentionId: string;
 }
 
+/** Intention déposée via le cockpit, revendiquée dans la file en base. */
+export interface QueuedIntention {
+  id: string;
+  title: string;
+  payload: unknown;
+  criterion: { kind: "formal" | "institutional"; ruleIds: string[]; description: string } | null;
+  categoryId: string;
+  categoryLabel: string;
+  autonomy: "shadow" | "copilot" | "auto";
+  autonomyThreshold: number;
+}
+
 export interface DaemonStore {
   readonly label: string;
+  /**
+   * Revendique atomiquement des intentions 'queued' (déposées via le
+   * cockpit) en les passant à 'processing'. Vide en dry-run.
+   */
+  claimQueued(limit: number): Promise<QueuedIntention[]>;
   /** Retourne l'id de catégorie pour un libellé (créée si absente). */
   ensureCategory(label: string): Promise<string>;
   /** Persiste une intention à l'admission ; retourne son id persistant. */
@@ -57,6 +74,57 @@ export class SupabaseStore implements DaemonStore {
     private readonly instanceId: string,
   ) {
     this.sb = createClient(url, serviceRoleKey, { auth: { persistSession: false } });
+  }
+
+  async claimQueued(limit: number): Promise<QueuedIntention[]> {
+    const { data: rows, error } = await this.sb
+      .from("intentions")
+      .select("id,title,payload,criterion,category_id")
+      .eq("instance_id", this.instanceId)
+      .eq("status", "queued")
+      .order("created_at", { ascending: true })
+      .limit(limit);
+    if (error) throw error;
+
+    const claimed: QueuedIntention[] = [];
+    for (const row of rows ?? []) {
+      // Revendication atomique : seul le premier processus gagne la ligne.
+      const { data: won, error: updErr } = await this.sb
+        .from("intentions")
+        .update({ status: "processing" })
+        .eq("id", row.id)
+        .eq("status", "queued")
+        .select("id");
+      if (updErr) throw updErr;
+      if (!won || won.length === 0) continue;
+
+      let categoryLabel = "Sans catégorie";
+      let autonomy: QueuedIntention["autonomy"] = "copilot";
+      let autonomyThreshold = 0.98;
+      if (row.category_id) {
+        const { data: cat } = await this.sb
+          .from("categories")
+          .select("label,autonomy,autonomy_threshold")
+          .eq("id", row.category_id)
+          .single();
+        if (cat) {
+          categoryLabel = cat.label;
+          autonomy = cat.autonomy;
+          autonomyThreshold = Number(cat.autonomy_threshold);
+        }
+      }
+      claimed.push({
+        id: row.id,
+        title: row.title,
+        payload: row.payload,
+        criterion: row.criterion,
+        categoryId: row.category_id ?? "",
+        categoryLabel,
+        autonomy,
+        autonomyThreshold,
+      });
+    }
+    return claimed;
   }
 
   async ensureCategory(label: string): Promise<string> {
@@ -279,6 +347,10 @@ export class DryRunStore implements DaemonStore {
 
   constructor(private readonly outboxDir: string) {
     mkdirSync(outboxDir, { recursive: true });
+  }
+
+  async claimQueued(): Promise<QueuedIntention[]> {
+    return []; // pas de file en base en dry-run — l'inbox fichiers suffit
   }
 
   async ensureCategory(label: string): Promise<string> {

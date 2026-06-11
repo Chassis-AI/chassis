@@ -24,7 +24,7 @@ import {
 } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildRuntime, processDossier } from "./daemon.js";
+import { buildRuntime, processDossier, processQueued } from "./daemon.js";
 import { DryRunStore, SupabaseStore, type DaemonStore } from "./store.js";
 import { parseDossier, parseHistory, parseSettlement, type HistoryFile } from "./types.js";
 
@@ -137,6 +137,22 @@ async function main(): Promise<void> {
   log(`Surveille ${DIRS.inbox} (dossiers) et ${DIRS.settlements} (verdicts réels)…`);
 
   const tick = async (): Promise<void> => {
+    // File en base : les dossiers déposés depuis le cockpit.
+    try {
+      for (const queued of await store.claimQueued(5)) {
+        try {
+          const result = await processQueued(runtime, store, instanceId, queued);
+          log(
+            `■ cockpit → ${queued.id} · ${result.disposition} · verdict ${result.verdict?.outcome ?? "—"} · mémorisé ${result.memorized ? "oui" : "non"}`,
+          );
+        } catch (err) {
+          log(`✕ cockpit ${queued.id} : ${err instanceof Error ? err.message : String(err)}`);
+        }
+      }
+    } catch (err) {
+      log(`✕ file en base : ${err instanceof Error ? err.message : String(err)}`);
+    }
+
     for (const file of takeFiles(DIRS.inbox)) {
       const claimed = claim(DIRS.inbox, file);
       if (!claimed) continue; // pris par un autre processus
