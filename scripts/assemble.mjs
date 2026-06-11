@@ -17,7 +17,11 @@ mkdirSync(join(dist, "app"), { recursive: true });
 
 buildSite(dist);
 cpSync(join(root, "apps/cockpit/dist"), join(dist, "app"), { recursive: true });
-// Règle SPA — utile aussi pour les deploys CLI sans netlify.toml.
-writeFileSync(join(dist, "_redirects"), "/app/*  /app/index.html  200\n");
+// Règles : SPA du cockpit + héritage de l'ancienne racine française
+// (l'anglais est désormais à la racine ; /en/ redirige pour les liens enregistrés).
+writeFileSync(
+  join(dist, "_redirects"),
+  ["/en/*  /:splat  301", "/app/*  /app/index.html  200", ""].join("\n"),
+);
 
 console.log("✓ dist/ assemblé (landing multilingue + cockpit sous /app/)");
