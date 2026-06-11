@@ -6,6 +6,7 @@
   "nav.journey": "Parcours",
   "nav.model": "Modèle",
   "nav.cta": "Devenir pilote",
+  "nav.signin": "Se connecter",
   "hero.eyebrow": "Système de travail vérifié",
   "hero.h1": "Le travail <span class=\"ghost\">promis</span>,<br/> <span class=\"proof\" data-stamp=\"VALIDÉ\">prouvé.</span>",
   "hero.sub": "CHASSIS exécute le travail spécialisé de votre métier, <b>prouve chaque résultat avant de le livrer</b>, et ne mémorise que ce qui a été validé. Son taux de réussite monte semaine après semaine — et vous ne payez que ce qui est prouvé.",

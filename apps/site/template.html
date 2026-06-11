@@ -37,6 +37,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .nav-cta{font-family:var(--fm);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
   color:#06170e;background:var(--pass);border-radius:5px;padding:8px 14px;text-decoration:none;transition:filter .15s}
 .nav-cta:hover{filter:brightness(1.1)}
+.nav-login{font-family:var(--fm);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--pass);border:1px solid rgba(91,228,155,.45);background:var(--pass-dim);
+  border-radius:5px;padding:7px 14px;text-decoration:none;transition:filter .15s}
+.nav-login:hover{filter:brightness(1.2)}
 .langs{display:flex;gap:2px;align-items:center}
 .langs a{font-family:var(--fm);font-size:10px;letter-spacing:.08em;color:var(--faint);text-decoration:none;
   padding:4px 7px;border-radius:4px;border:1px solid transparent;text-transform:uppercase}
@@ -153,6 +157,7 @@ footer .flinks a:hover{color:var(--dim)}
     <li><a href="#modele">{{nav.model}}</a></li>
   </ul>
   <div class="langs">{{langSwitcher}}</div>
+  <a class="nav-login" href="{{appHref}}">{{nav.signin}}</a>
   <a class="nav-cta" href="#pilote">{{nav.cta}}</a>
 </nav>
 
