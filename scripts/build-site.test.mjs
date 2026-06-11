@@ -34,9 +34,13 @@ describe("dictionnaires de la landing", () => {
 });
 
 describe("pages générées", () => {
+  it("l'anglais est la locale par défaut (racine)", () => {
+    assert.equal(LOCALES.find((l) => l.path === "/")?.code, "en");
+  });
+
   for (const locale of LOCALES) {
     const path =
-      locale.code === "fr" ? join(out, "index.html") : join(out, locale.code, "index.html");
+      locale.path === "/" ? join(out, "index.html") : join(out, locale.code, "index.html");
     const html = readFileSync(path, "utf8");
 
     it(`${locale.path} : aucun placeholder restant, lang correct`, () => {
@@ -57,7 +61,7 @@ describe("pages générées", () => {
   it("le mot banni n'apparaît dans aucune page générée", () => {
     for (const locale of LOCALES) {
       const path =
-        locale.code === "fr" ? join(out, "index.html") : join(out, locale.code, "index.html");
+        locale.path === "/" ? join(out, "index.html") : join(out, locale.code, "index.html");
       assert.equal(readFileSync(path, "utf8").toLowerCase().includes("nexus"), false, locale.code);
     }
   });

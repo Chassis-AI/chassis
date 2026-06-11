@@ -1,87 +1,99 @@
 # CHASSIS_
 
-**Système de travail vérifié.** CHASSIS exécute du travail spécialisé, prouve chaque
-résultat avant de le livrer (harness), ne mémorise que le validé (mémoire darwinienne),
-et monte en autonomie à la vitesse de la preuve. Facturé à l'unité validée.
+**Verified work system.** CHASSIS executes specialized work, proves every result
+before delivering it (the harness), memorizes only what has been validated
+(Darwinian memory), and gains autonomy at the pace of proof. Billed per
+validated unit.
 
-**🌍 En ligne** — [Français](https://chassis-pilote.netlify.app) ·
-[English](https://chassis-pilote.netlify.app/en/) ·
+**🌍 Live** — [English](https://chassis-pilote.netlify.app) ·
+[Français](https://chassis-pilote.netlify.app/fr/) ·
 [Español](https://chassis-pilote.netlify.app/es/) ·
 [中文](https://chassis-pilote.netlify.app/zh/) ·
-[Cockpit (démo)](https://chassis-pilote.netlify.app/app/?lang=fr&demo=1) ·
-[Cockpit (réel)](https://chassis-pilote.netlify.app/app/)
+[Cockpit (demo)](https://chassis-pilote.netlify.app/app/?lang=en&demo=1) ·
+[Cockpit (live)](https://chassis-pilote.netlify.app/app/)
 
-> Doctrine complète : [docs/DOCTRINE.md](docs/DOCTRINE.md) ·
-> Vision : [docs/VISION.md](docs/VISION.md) ·
-> Déploiement : [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+> Full doctrine: [docs/DOCTRINE.md](docs/DOCTRINE.md) ·
+> Vision: [docs/VISION.md](docs/VISION.md) ·
+> Deployment: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) *(doctrine docs are in French — the first pilot market)*
 
-## Aperçu
+## Overview
 
-| Cockpit — la file pré-jugée, la courbe, la mémoire | Connexion (magic link) |
+| Cockpit — the pre-judged queue, the curve, validated memory | Sign-in (magic link) |
 |---|---|
-| ![Cockpit en mode démo](docs/captures/cockpit-demo.png) | ![Connexion au cockpit](docs/captures/cockpit-login.png) |
+| ![Cockpit in demo mode](docs/captures/cockpit-demo.png) | ![Cockpit sign-in](docs/captures/cockpit-login.png) |
 
-| FR | EN | ES | 中文 |
+| EN | FR | ES | 中文 |
 |---|---|---|---|
-| ![Landing FR](docs/captures/landing-fr.png) | ![Landing EN](docs/captures/landing-en.png) | ![Landing ES](docs/captures/landing-es.png) | ![Landing ZH](docs/captures/landing-zh.png) |
+| ![Landing EN](docs/captures/landing-en.png) | ![Landing FR](docs/captures/landing-fr.png) | ![Landing ES](docs/captures/landing-es.png) | ![Landing ZH](docs/captures/landing-zh.png) |
 
 ## Structure
 
 ```
-packages/core/      @chassis/core — harness, boucle 6 temps, mémoire validée, routeur de modèles
-packages/providers/ @chassis/providers — adaptateurs moteurs (Anthropic, test) + exemple bout en bout
-apps/daemon/        Daemon v0 — inbox surveillée → boucle → persistance (Supabase ou dry-run)
-apps/cockpit/       Cockpit (Vite + React) — file d'intentions, verdicts, courbe, autonomie
-  src-tauri/        Coque desktop Tauri v2 (macOS .dmg / Windows .msi)
-apps/site/          Landing statique (Netlify)
-supabase/           schema.sql — tables + RLS (provenance mémoire imposée par contrainte)
-scripts/            assemble.mjs — assemble dist/ (landing + cockpit sous /app/)
-docs/               doctrine, déploiement
+packages/core/      @chassis/core — harness, 6-beat loop, validated memory, model router
+packages/providers/ @chassis/providers — engine adapters (Anthropic, test) + end-to-end example
+apps/daemon/        Daemon v0 — watched inbox → loop → persistence (Supabase or dry-run)
+apps/cockpit/       Cockpit (Vite + React) — intent queue, verdicts, curve, autonomy (fr/en/es/zh)
+  src-tauri/        Tauri v2 desktop shell (macOS .dmg / Windows .msi)
+apps/site/          Multilingual landing (template + i18n JSON per locale, generated at build)
+supabase/           schema.sql — tables + RLS (memory provenance enforced by constraint)
+scripts/            build-site.mjs (4-locale landing) · assemble.mjs (deployable dist/)
+docs/               doctrine, vision, deployment, screenshots
 ```
 
-## Démarrer
+## Getting started
 
 ```bash
 corepack enable          # pnpm
 pnpm install
-pnpm dev                 # cockpit sur http://localhost:5173 (mode démo seedé)
-pnpm -r build            # core + providers + cockpit
-node scripts/assemble.mjs  # produit dist/ déployable
+pnpm dev                 # cockpit at http://localhost:5173 (seeded demo mode)
+pnpm -r build            # core + providers + cockpit + daemon
+pnpm run test            # full-stack test suite (67 tests)
+node scripts/assemble.mjs  # produce deployable dist/ (4-locale landing + cockpit under /app/)
 
-# Le chaînon complet (daemon → boucle → verdicts) :
-pnpm --filter @chassis/daemon start            # dry-run sans config
+# The full chain (daemon → loop → verdicts):
+pnpm --filter @chassis/daemon start            # dry-run without any config
 cp apps/daemon/samples/*.json apps/daemon/data/inbox/
-```
-
-### Desktop (optionnel — requiert la toolchain Rust)
-
-```bash
-cd apps/cockpit
-pnpm tauri dev           # fenêtre native
-pnpm tauri build         # .dmg / .msi / .exe
 ```
 
 ### Supabase
 
-Créer un projet sur supabase.com puis exécuter `supabase/schema.sql` dans le SQL editor.
-Copier `.env.example` → `apps/cockpit/.env.local` avec l'URL et la clé anon.
-Sans `.env`, le cockpit tourne en mode démo (données seedées, étiquetées « démo »).
+Create a project on supabase.com, then run `supabase/schema.sql` in the SQL editor.
+Copy `.env.example` → `apps/cockpit/.env.local` with the URL and anon key.
+Without `.env`, the cockpit runs in demo mode (seeded data, labeled "demo");
+`?demo=1` forces demo mode even when keys are present (the landing's demo link).
 
-## Le moteur en 30 secondes
+### Desktop (optional — requires the Rust toolchain)
+
+```bash
+cd apps/cockpit
+pnpm tauri dev           # native window
+pnpm tauri build         # .dmg / .msi / .exe
+```
+
+## The engine in 30 seconds
 
 ```ts
 const harness = new Harness({ reliabilityGate: 0.85 });
-harness.registerRule(/* règles déclarées + apprises, versionnées */);
-await harness.calibrate(historique); // sous le seuil → le système n'a pas le droit de proposer
+harness.registerRule(/* declared + learned rules, versioned */);
+await harness.calibrate(history); // below the gate → the system may not propose
 
-const memory = new DarwinianMemory(store); // aucune insertion directe : verdicts/settlements uniquement
-const router = new ModelRouter();          // moteurs interchangeables (principe 6)
+const memory = new DarwinianMemory(store); // no direct insertion: verdicts/settlements only
+const router = new ModelRouter();          // interchangeable engines (principle 6)
 const loop = new ChassisLoop(harness, memory, router, generate);
 
-const result = await loop.run(intention, category); // shadow | copilot | auto — le harness reste la porte
+const result = await loop.run(intention, category); // shadow | copilot | auto — the harness stays the gate
 ```
 
-## Stack — décision actée
+## Internationalization
 
-TypeScript partout. Rust/Python rejetés pour la v0.1 (voir DOCTRINE.md, critères de
-réouverture inclus). Le seul Rust du repo est la coque Tauri, générée par le framework.
+The product is multilingual by construction (en/fr/es/zh). The landing is
+generated per locale (hreflang, one static page per language — adding a
+language = adding one JSON); the cockpit detects `?lang` → stored choice →
+browser language. UI chrome is translated; business data stays in the
+instance's language. A half-translated locale fails the build and the tests.
+
+## Stack — settled decision
+
+TypeScript everywhere. Rust/Python rejected for v0.1 (see DOCTRINE.md,
+reopening criteria included). The only Rust in the repo is the Tauri shell,
+generated by the framework.

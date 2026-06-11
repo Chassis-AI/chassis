@@ -15,9 +15,11 @@ import { fileURLToPath } from "node:url";
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE_URL = (process.env.SITE_URL ?? "https://chassis-pilote.netlify.app").replace(/\/$/, "");
 
+// L'anglais est la langue par défaut du site (racine) ; les autres locales
+// vivent sous /<code>/. Ajouter une langue = un JSON + une entrée ici.
 export const LOCALES = [
-  { code: "fr", htmlLang: "fr", label: "FR", path: "/" },
-  { code: "en", htmlLang: "en", label: "EN", path: "/en/" },
+  { code: "en", htmlLang: "en", label: "EN", path: "/" },
+  { code: "fr", htmlLang: "fr", label: "FR", path: "/fr/" },
   { code: "es", htmlLang: "es", label: "ES", path: "/es/" },
   { code: "zh", htmlLang: "zh-Hans", label: "中文", path: "/zh/" },
 ];
@@ -40,8 +42,8 @@ export function buildSite(distDir) {
       htmlLang: locale.htmlLang,
       canonicalUrl: `${SITE_URL}${locale.path}`,
       hreflangLinks,
-      appHref: `${locale.code === "fr" ? "./" : "../"}app/?lang=${locale.code}`,
-      demoHref: `${locale.code === "fr" ? "./" : "../"}app/?lang=${locale.code}&demo=1`,
+      appHref: `${locale.path === "/" ? "./" : "../"}app/?lang=${locale.code}`,
+      demoHref: `${locale.path === "/" ? "./" : "../"}app/?lang=${locale.code}&demo=1`,
       langSwitcher: LOCALES.map(
         (l) =>
           `<a href="${l.path}"${l.code === locale.code ? ' class="on"' : ""} hreflang="${l.htmlLang}">${l.label}</a>`,
@@ -59,7 +61,7 @@ export function buildSite(distDir) {
     const leftover = page.match(/\{\{[\w.]+\}\}/);
     if (leftover) throw new Error(`Placeholder non résolu : ${leftover[0]}`);
 
-    const outDir = locale.code === "fr" ? distDir : join(distDir, locale.code);
+    const outDir = locale.path === "/" ? distDir : join(distDir, locale.code);
     mkdirSync(outDir, { recursive: true });
     writeFileSync(join(outDir, "index.html"), page);
   }
