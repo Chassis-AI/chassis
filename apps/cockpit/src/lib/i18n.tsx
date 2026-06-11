@@ -102,6 +102,20 @@ const fr: Dict = {
   "deposit.done": "Voir la file",
   "deposit.noteDemo": "Démo : jugé instantanément dans votre navigateur, par le vrai moteur. Rien n'est envoyé.",
   "deposit.noteLive": "Le dossier entre en file. Le harness reste la porte : verdict ligne à ligne.",
+  "auth.tabSignin": "Se connecter",
+  "auth.tabSignup": "Créer un compte",
+  "auth.tabMagic": "Lien magique",
+  "auth.password": "Mot de passe",
+  "auth.displayName": "Nom (optionnel)",
+  "auth.signinBtn": "Se connecter",
+  "auth.signupBtn": "Créer le compte",
+  "auth.signupSent": "Compte créé. Ouvrez l'email de confirmation envoyé à {email}.",
+  "auth.forgot": "Mot de passe oublié ?",
+  "auth.forgotBtn": "Envoyer le lien de réinitialisation",
+  "auth.forgotSent": "Email de réinitialisation envoyé à {email}.",
+  "auth.recoveryTitle": "Choisissez un nouveau mot de passe.",
+  "auth.recoveryBtn": "Mettre à jour le mot de passe",
+  "auth.back": "← Retour",
 };
 
 const en: Dict = {
@@ -185,6 +199,20 @@ const en: Dict = {
   "deposit.done": "View the queue",
   "deposit.noteDemo": "Demo: judged instantly in your browser by the real engine. Nothing is sent.",
   "deposit.noteLive": "The case enters the queue. The harness remains the gate: line-by-line verdict.",
+  "auth.tabSignin": "Sign in",
+  "auth.tabSignup": "Create account",
+  "auth.tabMagic": "Magic link",
+  "auth.password": "Password",
+  "auth.displayName": "Name (optional)",
+  "auth.signinBtn": "Sign in",
+  "auth.signupBtn": "Create the account",
+  "auth.signupSent": "Account created. Open the confirmation email sent to {email}.",
+  "auth.forgot": "Forgot your password?",
+  "auth.forgotBtn": "Send reset link",
+  "auth.forgotSent": "Reset email sent to {email}.",
+  "auth.recoveryTitle": "Choose a new password.",
+  "auth.recoveryBtn": "Update password",
+  "auth.back": "← Back",
 };
 
 const es: Dict = {
@@ -268,6 +296,20 @@ const es: Dict = {
   "deposit.done": "Ver la cola",
   "deposit.noteDemo": "Demo: juzgado al instante en su navegador por el motor real. No se envía nada.",
   "deposit.noteLive": "El expediente entra en la cola. El harness sigue siendo la puerta: veredicto línea a línea.",
+  "auth.tabSignin": "Iniciar sesión",
+  "auth.tabSignup": "Crear cuenta",
+  "auth.tabMagic": "Enlace mágico",
+  "auth.password": "Contraseña",
+  "auth.displayName": "Nombre (opcional)",
+  "auth.signinBtn": "Iniciar sesión",
+  "auth.signupBtn": "Crear la cuenta",
+  "auth.signupSent": "Cuenta creada. Abra el email de confirmación enviado a {email}.",
+  "auth.forgot": "¿Olvidó su contraseña?",
+  "auth.forgotBtn": "Enviar enlace de restablecimiento",
+  "auth.forgotSent": "Email de restablecimiento enviado a {email}.",
+  "auth.recoveryTitle": "Elija una nueva contraseña.",
+  "auth.recoveryBtn": "Actualizar contraseña",
+  "auth.back": "← Volver",
 };
 
 const zh: Dict = {
@@ -351,6 +393,20 @@ const zh: Dict = {
   "deposit.done": "查看队列",
   "deposit.noteDemo": "演示：由真实引擎在您的浏览器中即时裁定，不发送任何数据。",
   "deposit.noteLive": "案卷进入队列。校验闸门始终是唯一入口：逐行裁定。",
+  "auth.tabSignin": "登录",
+  "auth.tabSignup": "注册",
+  "auth.tabMagic": "魔法链接",
+  "auth.password": "密码",
+  "auth.displayName": "姓名（可选）",
+  "auth.signinBtn": "登录",
+  "auth.signupBtn": "创建账户",
+  "auth.signupSent": "账户已创建。请打开发送至 {email} 的确认邮件。",
+  "auth.forgot": "忘记密码？",
+  "auth.forgotBtn": "发送重置链接",
+  "auth.forgotSent": "重置邮件已发送至 {email}。",
+  "auth.recoveryTitle": "请设置新密码。",
+  "auth.recoveryBtn": "更新密码",
+  "auth.back": "← 返回",
 };
 
 export const DICTS: Record<Lang, Dict> = { fr, en, es, zh };

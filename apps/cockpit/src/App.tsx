@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { DepositOverlay } from "./Deposit";
-import { ErrorScreen, Loading, NoInstance, SignIn } from "./Gate";
+import { ErrorScreen, Loading, NoInstance, Recovery, SignIn } from "./Gate";
 import type { CockpitData, StampKind, UiCurve, UiIntent } from "./lib/data";
 import { LangSwitcher, useI18n, type Translate } from "./lib/i18n";
 import { useCockpit } from "./lib/useCockpit";
@@ -12,6 +12,7 @@ export function App() {
 
   if (cockpit.phase === "loading") return <Loading />;
   if (cockpit.phase === "signin") return <SignIn />;
+  if (cockpit.phase === "recovery") return <Recovery onDone={() => void cockpit.reload()} />;
   if (cockpit.phase === "no-instance")
     return (
       <NoInstance

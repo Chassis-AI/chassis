@@ -30,7 +30,13 @@ import {
   type DepositInput,
 } from "./demoLoop";
 
-export type CockpitPhase = "loading" | "signin" | "no-instance" | "ready" | "error";
+export type CockpitPhase =
+  | "loading"
+  | "signin"
+  | "recovery"
+  | "no-instance"
+  | "ready"
+  | "error";
 
 export interface CockpitState {
   phase: CockpitPhase;
@@ -88,9 +94,11 @@ export function useCockpit(): CockpitState {
     });
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, s) => {
+    } = supabase.auth.onAuthStateChange((event, s) => {
       setSession(s);
-      if (!s) {
+      if (event === "PASSWORD_RECOVERY") {
+        setPhase("recovery"); // arrivée depuis le lien « mot de passe oublié »
+      } else if (!s) {
         setData(null);
         setPhase("signin");
       }
@@ -98,9 +106,11 @@ export function useCockpit(): CockpitState {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Session établie → charger les données réelles.
+  // Session établie → charger les données réelles (sauf en réinitialisation
+  // de mot de passe, où l'écran Recovery doit rester affiché).
   useEffect(() => {
-    if (isLive && session) void reload();
+    if (isLive && session && phase !== "recovery") void reload();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, reload]);
 
   const applyBatch = useCallback(

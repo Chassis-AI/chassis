@@ -620,6 +620,24 @@ body::after {
   color: var(--faint);
 }
 .deposit-note { font-size: 11px; color: var(--faint); line-height: 1.6; }
+
+/* ── Onglets d'authentification ── */
+.auth-tabs { display: flex; gap: 6px; }
+.auth-tab {
+  flex: 1;
+  font-family: var(--font-m);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+  background: var(--bg);
+  border: 1px solid var(--line-2);
+  border-radius: 6px;
+  padding: 8px 4px;
+  cursor: pointer;
+}
+.auth-tab.on { color: var(--pass); border-color: rgba(91, 228, 155, 0.5); background: var(--pass-dim); }
+.gate-back { align-self: flex-start; }
 .deposit-queued { display: flex; flex-direction: column; gap: 14px; }
 
 /* ── responsive ── */
